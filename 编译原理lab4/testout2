@@ -1,0 +1,93 @@
+           line        id_type        id_name       id_adder
+              1           type            int
+              1             id           main             -1
+              1        bracket              (
+              1        bracket              )
+              2        bracket              {
+              3           type            int
+              3             id              a              1
+              3        bracket              ;
+              4           type            int
+              4             id              b              1
+              4        bracket              ;
+              5        keyword          while
+              5        bracket              (
+              5        bracket              )
+              6        bracket              {
+              7           type            int
+              7             id              a              2
+              7        bracket              ;
+              8             id              a              2
+              8            opt              =
+              8        integer              1
+              8        bracket              ;
+              9             id              b              1
+              9            opt              =
+              9             id              b              1
+              9            opt              +
+              9        integer              1
+              9        bracket              ;
+             10           type            int
+             10             id              b              2
+             10            opt              =
+             10        integer             18
+             10        bracket              ;
+             11        bracket              }
+             12        keyword         return
+             12             id              a              1
+             12        bracket              ;
+             13        bracket              }
+             15           type            int
+             15             id              f             -1
+             15        bracket              (
+             15        bracket              )
+             16        bracket              {
+             17           type            int
+             17             id              a              1
+             17        bracket              ;
+             18           type            int
+             18             id              b              1
+             18        bracket              ;
+             20        keyword            for
+             20        bracket              (
+             20           type            int
+             20             id              a              1
+             20            opt              =
+             20        integer              5
+             20        bracket              )
+             21        bracket              {
+             22             id              b              1
+             22            opt              =
+             22        integer            100
+             22        bracket              ;
+             23        keyword            for
+             23        bracket              (
+             23           type            int
+             23             id              i              2
+             23        bracket              )
+             24        bracket              {
+             24             id              a              1
+             24            opt              =
+             24        integer              8
+             24        bracket              ;
+             25             id              b              1
+             25            opt              =
+             25        integer             28
+             25        bracket              ;
+             26           type            int
+             26             id              b              3
+             26        bracket              ;
+             27             id              b              3
+             27            opt              =
+             27        integer             18
+             27        bracket              ;
+             28        bracket              }
+             29        keyword         return
+             29             id              b              1
+             29        bracket              ;
+             30        bracket              }
+             31             id              b              1
+             31            opt              =
+             31        integer             58
+             31        bracket              ;
+             32        bracket              }
