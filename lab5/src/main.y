@@ -6,15 +6,13 @@
     int yylex();
     int yyerror( char const * );
 %}
+%token SEN_IF SEN_WHILE SEN_FOR
 %token T_CHAR T_INT T_STRING T_BOOL 
-
-%token LOP_ASSIGN 
-
-%token SEMICOLON
-
+%token LOP_ASSIGN LOP_ADD LOP_SUB LOP_DEV LOP_MUL
+%token SEMICOLON COMMA LP RP LB RB
 %token IDENTIFIER INTEGER CHAR BOOL STRING
-
-%left LOP_EQ
+%token OP_MADD OP_MSUB
+%token LOG_MASS LOG_RB LOG_LB LOG_RAB LOG_LAB
 
 %%
 

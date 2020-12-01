@@ -19,15 +19,35 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 
 {BLOCKCOMMENT}  /* do nothing */
 {LINECOMMENT}  /* do nothing */
-
+"if" return SEN_IF;
+"while" return SEN_WHILE;
+"for" return SEN_FOR;
 
 "int" return T_INT;
 "bool" return T_BOOL;
 "char" return T_CHAR;
 
 "=" return LOP_ASSIGN;
+"+" return LOP_ADD;
+"-" return LOP_SUB;
+"*" return LOP_MUL;
+"/" return LOP_DEV;
+
+"==" return LOG_MASS;
+"<" return LOG_RB;
+"<=" return LOG_RAB;
+">" return  LOG_LB;
+">=" return LOG_LAB;
+
+"++" return OP_MADD;
+"--" return OP_MSUB;
 
 ";" return  SEMICOLON;
+"," return COMMA;
+"(" return LP;
+")" return RP;
+"{" return LB;
+"}" return RB;
 
 {INTEGER} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
