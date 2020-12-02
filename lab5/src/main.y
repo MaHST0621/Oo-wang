@@ -6,7 +6,7 @@
     int yylex();
     int yyerror( char const * );
 %}
-%token SEN_IF SEN_WHILE SEN_FOR
+%token SEN_IF SEN_WHILE SEN_FOR SEN_PRINTF SEN_SCANF
 %token T_CHAR T_INT T_STRING T_BOOL 
 %token LOP_ASSIGN LOP_ADD LOP_SUB LOP_DEV LOP_MUL
 %token SEMICOLON COMMA LP RP LB RB
@@ -14,6 +14,13 @@
 %token LOP_MADD LOP_MSUB
 %token LOG_MASS LOG_RB LOG_LB LOG_RAB LOG_LAB
 
+%left COMMA
+%right LOP_NOT
+%left LOP_MUL LOP_DEV
+%left LOP_ADD LOP_SUB
+%left LOP_MADD LOP_MSUB
+%left LOG_LB LOG_RB LOG_LAB LOG_RAB  
+%right LOG_MASS
 %%
 
 program
@@ -26,9 +33,24 @@ statements
 
 statement
 : SEMICOLON  {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
+| LB statement RB {$$ = $2;}
 | declaration SEMICOLON {$$ = $1;}
+| if_stm {$$ = $1;}
+| printf_stm SEMICOLON {$$ = $1;}
+| single_expr   {$$ = $1;}
 ;
 
+single_expr
+: LOP_MADD IDENTIFIER {
+    TreeNode* node = new TreeNode(lineno,NODE_STMT);
+    node->addChild($2);
+    $$ = node;
+}
+| LOP_MSUB IDENTIFIER {
+    TreeNode* node = new TreeNode(lineno,NODE_STMT);
+    node->addChild($2);
+    $$ = node;
+}
 declaration
 : T IDENTIFIER LOP_ASSIGN expr{  // declare and init
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
@@ -62,7 +84,26 @@ expr
 }
 ;
 
-T: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;} 
+printf_stm
+: SEN_PRINTF expr {
+    TreeNode* node = new TreeNode($1->lineno,NODE_STMT);
+    node->addChild($2);
+    $$ = node;
+}
+
+if_stm
+: SEN_IF LP expr RP statement {
+    TreeNode* node = new TreeNode(lineno,NODE_STMT);
+    node->stype = STMT_IF;
+    node->addChild($3);
+    node->addChild($5);
+    $$ = node;
+}
+
+
+
+T
+: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;} 
 | T_CHAR {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_CHAR;}
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
 ;

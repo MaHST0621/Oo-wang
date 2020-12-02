@@ -15,7 +15,7 @@ CHAR \'.?\'
 STRING \".+\"
 
 /* IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]* */
-IDENTIFIER [_a-zA-Z][_a-zA-Z0-9]*
+IDENTIFIER [a-zA-Z][_a-zA-Z0-9]*
 %%
 
 {BLOCKCOMMENT}  /* do nothing */
@@ -23,27 +23,29 @@ IDENTIFIER [_a-zA-Z][_a-zA-Z0-9]*
 "if"  return SEN_IF;
 "while" return SEN_WHILE;
 "for"  return SEN_FOR;
+"printf" return SEN_PRINTF;
+"scanf" return SEN_SCANF;
 
 "int" return T_INT;
 "bool" return T_BOOL;
 "char" return T_CHAR;
 
-"=" {TreeNode* node = new TreeNode(lineno,NODE_CONST) ;  return LOP_ASSIGN;}
+"=" return LOP_ASSIGN;
 "+" return LOP_ADD;
 "-" return LOP_SUB;
 "*" return LOP_MUL;
 "/" return LOP_DEV;
 
 "==" return LOG_MASS;
-"<" return LOG_RB;
+"<"  return LOG_RB;
 "<=" return LOG_RAB;
-">" return  LOG_LB;
+">"  return  LOG_LB;
 ">=" return LOG_LAB;
 
 "++" return LOP_MADD;
 "--" return LOP_MSUB;
 
-";" return  SEMICOLON;
+";" return SEMICOLON;
 "," return COMMA;
 "(" return LP;
 ")" return RP;
@@ -72,6 +74,12 @@ IDENTIFIER [_a-zA-Z][_a-zA-Z0-9]*
     yylval = node;
     return IDENTIFIER;
 }
+{STRING} {
+    TreeNode* node = new TreeNode(lineno,NODE_CONST);
+    node->type = TYPE_STRING;
+    yylval = node;
+    return STRING;
+        }
 
 {WHILTESPACE} /* do nothing */
 

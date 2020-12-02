@@ -53,8 +53,7 @@ void TreeNode::genNodeId() {
 }
 
 void TreeNode::printNodeInfo() {
-   // cout<<std::left<<std::setw(3)<<"ln@"<<std::left<<std::setw(3)<<this->lineno<<std::left<<std::setw(3)<<"@"<<this->nodeID<<std::left << std::setw(12)<<this->nodeType2String(this->nodeType);
-   cout<<"ln@"<<std::left << std::setw(3)<<this->lineno<<"@"<<std::left << std::setw(3)<<this->nodeID<<std::left << std::setw(12)<<this->nodeType2String(this->nodeType);
+   cout<<"ln@"<<std::left << std::setw(3)<<this->lineno<<"@"<<std::left << std::setw(3)<<this->nodeID<<std::left << std::setw(15)<<this->nodeType2String(this->nodeType);
 
 }
 
@@ -75,7 +74,7 @@ void TreeNode::printChildrenId() {
             }
         }
     childrenId+="]";
-    cout<<"children: " <<std::left << std::setw(15)<< childrenId<<"  ";
+    cout<<"children:" <<std::left << std::setw(20)<< childrenId<<"  ";
 }
 void TreeNode::printAST() {
     this->printNodeInfo();
@@ -106,13 +105,13 @@ void TreeNode::printSpecialInfo() {
             cout<<"NODE_EXPR:"<<endl;
             break;
         case NODE_STMT:
-            cout<<"NODE_STMT:"<<endl;
+            cout<<"STMT:"<<this->sType2String(this->stype)<<endl;
             break;
         case NODE_TYPE:
             cout<<std::left<<"NODE_TYPE:"<<this->type->getTypeInfo()<<endl;
             break;
         case NODE_PROG:
-            cout<<"NODE_PROG:"<<endl;
+            cout<<"PROG"<<endl;
         default:
             break;
             
@@ -120,8 +119,19 @@ void TreeNode::printSpecialInfo() {
 }
 
 string TreeNode::sType2String(StmtType type) {
-    return "?";
+    switch(type)
+    {
+        case STMT_IF:
+            return "smt-if";
+        case STMT_FOR:
+            return "smt-for";
+        case STMT_DECL:
+            return "smt-decl";
+        case STMT_WHILE:
+            return "smt-while";
+    }
 }
+
 
 
 string TreeNode::nodeType2String (NodeType type){
