@@ -19,9 +19,9 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 
 {BLOCKCOMMENT}  /* do nothing */
 {LINECOMMENT}  /* do nothing */
-"if" return SEN_IF;
+"if"  return SEN_IF;
 "while" return SEN_WHILE;
-"for" return SEN_FOR;
+"for"  return SEN_FOR;
 
 "int" return T_INT;
 "bool" return T_BOOL;

@@ -1,5 +1,4 @@
-ln@0  @0  <>          children: [@1 @2 ]       
-ln@1  @1  <>          children: [@4 ]          
-ln@1  @4  <>          children: []             
-ln@2  @2  <>          children: [@3 ]          
-ln@2  @3  <>          children: []             
+ln@0  @0  prog        children: [@1 @2 ]         ln@1  @1  stmt        children: [@4 ]            NODE_STMT:
+ln@1  @4  type        children: []               NODE_TYPE:0x562e42e5b030
+ln@2  @2  stmt        children: [@3 ]            NODE_STMT:
+ln@2  @3  type        children: []               NODE_TYPE:0x562e42e5b060

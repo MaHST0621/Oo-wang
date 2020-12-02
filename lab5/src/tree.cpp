@@ -75,7 +75,7 @@ void TreeNode::printChildrenId() {
             }
         }
     childrenId+="]";
-    cout<<"children: " <<std::left << std::setw(15)<< childrenId<<endl;
+    cout<<"children: " <<std::left << std::setw(15)<< childrenId<<"  ";
 }
 void TreeNode::printAST() {
     this->printNodeInfo();
@@ -97,17 +97,23 @@ void TreeNode::printAST() {
 void TreeNode::printSpecialInfo() {
     switch(this->nodeType){
         case NODE_CONST:
+            cout<<std::left<<"NODE_CONST:"<<this->int_val<<endl;
             break;
         case NODE_VAR:
+            cout<<std::left<<"NODE_VAR:"<<this->var_name<<endl;
             break;
         case NODE_EXPR:
+            cout<<"NODE_EXPR:"<<endl;
             break;
         case NODE_STMT:
+            cout<<"NODE_STMT:"<<endl;
             break;
         case NODE_TYPE:
+            cout<<std::left<<"NODE_TYPE:"<<this->type<<endl;
             break;
         default:
             break;
+            
     }
 }
 
@@ -117,5 +123,19 @@ string TreeNode::sType2String(StmtType type) {
 
 
 string TreeNode::nodeType2String (NodeType type){
-    return "<>";
+    switch(type)
+    {
+        case NODE_VAR:
+            return "var";
+        case NODE_EXPR:
+            return "expr";
+        case NODE_PROG:
+            return "prog";
+        case NODE_STMT:
+            return "stmt";
+        case NODE_TYPE:
+            return "type";
+        case NODE_CONST:
+            return "const";
+    }
 }
