@@ -14,7 +14,8 @@ INTEGER [0-9]+
 CHAR \'.?\'
 STRING \".+\"
 
-IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
+/* IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]* */
+IDENTIFIER [_a-zA-Z][_a-zA-Z0-9]*
 %%
 
 {BLOCKCOMMENT}  /* do nothing */
@@ -27,7 +28,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "bool" return T_BOOL;
 "char" return T_CHAR;
 
-"=" return LOP_ASSIGN;
+"=" {TreeNode* node = new TreeNode(lineno,NODE_CONST) ;  return LOP_ASSIGN;}
 "+" return LOP_ADD;
 "-" return LOP_SUB;
 "*" return LOP_MUL;
@@ -39,8 +40,8 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 ">" return  LOG_LB;
 ">=" return LOG_LAB;
 
-"++" return OP_MADD;
-"--" return OP_MSUB;
+"++" return LOP_MADD;
+"--" return LOP_MSUB;
 
 ";" return  SEMICOLON;
 "," return COMMA;

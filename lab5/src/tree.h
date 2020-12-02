@@ -17,12 +17,29 @@ enum NodeType
 
 enum OperatorType
 {
-    OP_EQ,  // ==
+      // ==
+    OP_ASSIGN,
+    OP_ADD,
+    OP_SUB,
+    OP_MUL,
+    OP_DEV,
+
+    OP_MASS,
+    OP_RB,
+    OP_RAB,
+    OP_LB,
+    OP_LAB,
+
+    OP_MADD,
+    OP_MSUB,
 };
 
 enum StmtType {
     STMT_SKIP,
     STMT_DECL,
+    STMT_IF,
+    STMT_FOR,
+    STMT_WHILE,
 }
 ;
 

@@ -3,12 +3,12 @@ static int nodeaddr = 0;
 void TreeNode::addChild(TreeNode* child) {
     if(this->child)
     {
-        TreeNode* tmp = this->child->sibling;
-        while(tmp)
+        TreeNode* tmp = this->child;
+        while(tmp->sibling)
         {
             tmp = tmp->sibling;
         }
-        tmp = child;
+        tmp->sibling = child;
     }
     else
     {
@@ -21,12 +21,12 @@ void TreeNode::addChild(TreeNode* child) {
 void TreeNode::addSibling(TreeNode* sibling){
     if(this->sibling)
     {
-        TreeNode* tmp = this->sibling->sibling;
-        while(tmp)
+        TreeNode* tmp = this->sibling;
+        while(tmp->sibling)
         {
             tmp = tmp->sibling;
         }
-        tmp = sibling;
+        tmp->sibling = sibling;
     }
     else
     {
@@ -109,8 +109,10 @@ void TreeNode::printSpecialInfo() {
             cout<<"NODE_STMT:"<<endl;
             break;
         case NODE_TYPE:
-            cout<<std::left<<"NODE_TYPE:"<<this->type<<endl;
+            cout<<std::left<<"NODE_TYPE:"<<this->type->getTypeInfo()<<endl;
             break;
+        case NODE_PROG:
+            cout<<"NODE_PROG:"<<endl;
         default:
             break;
             
