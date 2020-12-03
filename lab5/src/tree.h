@@ -25,6 +25,7 @@ enum OperatorType
     OP_DEV,
 
     OP_MASS,
+    OP_MNOT,
     OP_RB,
     OP_RAB,
     OP_LB,
@@ -32,6 +33,9 @@ enum OperatorType
 
     OP_MADD,
     OP_MSUB,
+
+    OP_AND,
+    OP_OR,
 };
 
 enum StmtType {

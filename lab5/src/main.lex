@@ -16,6 +16,26 @@ STRING \".+\"
 
 /* IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]* */
 IDENTIFIER [a-zA-Z][_a-zA-Z0-9]*
+
+LOP_ASSIGN   "="
+LOP_ADD     "+"     
+LOP_SUB     "-"
+LOP_MUL     "*"
+LOP_DEV     "/"
+
+LOG_MASS   "=="
+LOG_MNOT   "!="
+LOG_RB     "<"
+LOG_RAB    "<="
+LOG_LB     ">"
+LOG_LAB    ">="
+LOG_OR     "||"
+LOG_AND    "&&"
+
+LOP_MADD   "++"
+LOP_MSUB   "--"
+
+
 %%
 
 {BLOCKCOMMENT}  /* do nothing */
@@ -29,24 +49,6 @@ IDENTIFIER [a-zA-Z][_a-zA-Z0-9]*
 "int" return T_INT;
 "bool" return T_BOOL;
 "char" return T_CHAR;
-
-"=" return LOP_ASSIGN;
-"+" return LOP_ADD;
-"-" return LOP_SUB;
-"*" return LOP_MUL;
-"/" return LOP_DEV;
-
-"==" return LOG_MASS;
-"!=" return LOG_MNOT;
-"<"  return LOG_RB;
-"<=" return LOG_RAB;
-">"  return  LOG_LB;
-">=" return LOG_LAB;
-"||" return LOG_OR;
-"&&" return LOG_AND;
-
-"++" return LOP_MADD;
-"--" return LOP_MSUB;
 
 ";" return SEMICOLON;
 "," return COMMA;
@@ -85,6 +87,29 @@ IDENTIFIER [a-zA-Z][_a-zA-Z0-9]*
         }
 
 {WHILTESPACE} /* do nothing */
+
+{LOP_ASSIGN}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_ASSIGN;}
+{LOP_ADD}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_ADD;}
+{LOP_SUB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_SUB;}
+{LOP_MUL}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_MUL;}
+{LOP_DEV}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_DEV;}
+
+
+
+{LOG_MASS}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_MASS;}
+{LOG_MNOT}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_RB;}
+{LOG_RB}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_RB;}
+{LOG_RAB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_RAB;}
+{LOG_LB}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_LAB;}
+{LOG_LAB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_LAB;}
+{LOG_OR}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_OR;}
+{LOG_AND}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_AND;}
+
+{LOP_MADD}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_MADD;}
+{LOP_MSUB}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_SUB;}
+
+
+
 
 {EOL} lineno++;
 

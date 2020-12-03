@@ -87,7 +87,7 @@ printf_stm
 }
 
 if_stm
-: SEN_IF LP Number RP LB statements RB {
+: SEN_IF LP Cond  RP LB statements RB {
     cout<<7<<endl;
     TreeNode* node = new TreeNode(lineno,NODE_STMT);
     node->stype = STMT_IF;
@@ -105,20 +105,22 @@ T
 ;
 
 expr
-:   Addexpr 
+:   Addexpr {$$ = $1;}
 ;
 LVal
-:   IDENTIFIER
+:   IDENTIFIER {$$ = $1;}
 ;
 //基本表达式
 Primaryexpr
-:   LP expr RP
-|   LVal
-|   Number
+:   LP expr RP {
+    $$ = $2;    
+}
+|   LVal {$$ = $1;}
+|   Number {$$ = $1;}
 ;
 //条件表达式
 Cond
-:   LOrexpr
+:   LOrexpr {$$ = $1;}
 ;
 //关系运算符
 RelOp
@@ -130,48 +132,101 @@ RelOp
 ;
 //一元表达式
 Unaryexpr
-:   Primaryexpr
-|   UnaryOp Unaryexpr
+:   Primaryexpr {
+    $$ = $1;
+}
+|   UnaryOp Unaryexpr {
+    $1->addChild($2);
+    $$ = $1;
+}
 ;
 //单目运算符
 UnaryOp
-:   LOP_ADD
-|   LOP_SUB
+:   LOP_ADD 
+|   LOP_SUB 
 |   LOP_NOT 
 ;
 //乘除表达式
 Mulexpr
-:   Unaryexpr
-|   Addexpr LOP_ADD Mulexpr
-|   Addexpr LOP_SUB Mulexpr
+:   Unaryexpr {
+    $$ = $1;
+}
+|   Addexpr LOP_MUL Mulexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
+|   Addexpr LOP_DEV Mulexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
 ;
 //加减表达式
 Addexpr 
-:   Mulexpr
-|   Addexpr LOP_ADD Mulexpr
-|   Addexpr LOP_SUB Mulexpr
+:   Mulexpr {
+    $$ = $1;
+}
+|   Addexpr LOP_ADD Mulexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
+|   Addexpr LOP_SUB Mulexpr{
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
 ;
 //关系表达式
 Relexpr
-:   Addexpr
-|   Relexpr RelOp Addexpr
+:   Addexpr {
+    $$ = $1;
+}
+|   Relexpr RelOp Addexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
 ;
 //相等性表达式
 Eqexpr
-:   Relexpr
-|   Eqexpr LOG_MASS Relexpr
-|   Eqexpr LOG_MNOT Relexpr
+:   Relexpr {
+    $$ = $1;
+}
+|   Eqexpr LOG_MASS Relexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
+|   Eqexpr LOG_MNOT Relexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
 ;
 
 //逻辑与表达式
 LAndexpr
-:   Eqexpr
-|   LAndexpr LOG_AND Eqexpr
+:   Eqexpr {
+    $$ = $1;
+}
+|   LAndexpr LOG_AND Eqexpr { 
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
 ;
 //逻辑或表达式
 LOrexpr
-:   LAndexpr
-|   LOrexpr LOG_OR LAndexpr 
+:   LAndexpr {
+    $$ = $1;
+}
+|   LOrexpr LOG_OR LAndexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+} 
 ;
 %%
 
