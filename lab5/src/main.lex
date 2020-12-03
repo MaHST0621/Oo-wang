@@ -56,6 +56,8 @@ LOP_MSUB   "--"
 ")" return RP;
 "{" return LB;
 "}" return RB;
+"[" return LA;
+"]" return RA;
 
 {INTEGER} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);

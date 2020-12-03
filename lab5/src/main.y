@@ -9,7 +9,7 @@
 %token SEN_IF SEN_WHILE SEN_FOR SEN_PRINTF SEN_SCANF
 %token T_CHAR T_INT T_STRING T_BOOL 
 %token LOP_ASSIGN LOP_ADD LOP_SUB LOP_DEV LOP_MUL
-%token SEMICOLON COMMA LP RP LB RB
+%token SEMICOLON COMMA LP RP LB RB LA RA
 %token IDENTIFIER INTEGER CHAR BOOL STRING
 %token LOP_MADD LOP_MSUB
 %token LOG_MASS LOG_MNOT LOG_RB LOG_LB LOG_RAB LOG_LAB LOG_AND LOG_OR
@@ -36,27 +36,60 @@ statement
 | LB statement RB {$$ = $2;}
 | declaration SEMICOLON {$$ = $1;}
 | if_stm {$$ = $1;}
-| printf_stm {$$ = $1;}
+| printf_stm SEMICOLON {$$ = $1;}
 | while_stm {$$ = $1;}
 ;
 
 declaration
-: T IDENTIFIER LOP_ASSIGN Number{  // declare and init
-    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+: VarDecl   {$$ = $1;}
+;
+
+
+VarDecl
+: T Vardeflist {
+    TreeNode* node = new TreeNode($1->lineno,NODE_STMT);
     node->stype = STMT_DECL;
     node->addChild($1);
     node->addChild($2);
-    node->addChild($4);
-    $$ = node;   
-} 
-| T IDENTIFIER {
-    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
-    node->stype = STMT_DECL;
-    node->addChild($1);
-    node->addChild($2);
-    $$ = node;   
+    $$ = node;
 }
 ;
+
+VarDef
+: Ident LOP_ASSIGN  Initval {
+    $1->addSibling($3);
+    $$ = $1;
+}
+;
+
+Initval
+: Constexpr {$$ = $1;}
+;
+
+Vardeflist
+: VarDef {$$ = $1;}
+| VarDef COMMA Vardeflist {
+    $$->addSibling($1);
+    $$ = $1;
+}
+;
+/* declaration */
+/* : T IDENTIFIER LOP_ASSIGN Number SEMICOLON {   // declare and init */
+/*     TreeNode* node = new TreeNode($1->lineno, NODE_STMT); */
+/*     node->stype = STMT_DECL; */
+/*     node->addChild($1); */
+/*     node->addChild($2); */
+/*     node->addChild($4); */
+/*     $$ = node; */   
+/* } */ 
+/* | T Identlist SEMICOLON { */
+/*     TreeNode* node = new TreeNode($1->lineno, NODE_STMT); */
+/*     node->stype = STMT_DECL; */
+/*     node->addChild($1); */
+/*     node->addChild($2); */
+/*     $$ = node; */   
+/* } */
+/* ; */
 
 Ident
 : IDENTIFIER {
@@ -113,58 +146,50 @@ T
 ;
 
 expr
-:   Addexpr {$$ = $1;}
+: Addexpr {$$ = $1;}
 ;
 LVal
-:   IDENTIFIER {$$ = $1;}
+: IDENTIFIER {$$ = $1;}
 ;
 //基本表达式
 Primaryexpr
-:   LP expr RP {
+: LP expr RP {
     $$ = $2;    
 }
-|   LVal {$$ = $1;}
-|   Number {$$ = $1;}
+| LVal {$$ = $1;}
+| Number {$$ = $1;}
 ;
 //条件表达式
 Cond
-:   LOrexpr {$$ = $1;}
-;
-//关系运算符
-RelOp
-:   LOG_MASS
-|   LOG_LB 
-|   LOG_RB
-|   LOG_LAB
-|   LOG_RAB
+: LOrexpr {$$ = $1;}
 ;
 //一元表达式
 Unaryexpr
-:   Primaryexpr {
+: Primaryexpr {
     $$ = $1;
 }
-|   UnaryOp Unaryexpr {
+| UnaryOp Unaryexpr {
     $1->addChild($2);
     $$ = $1;
 }
 ;
 //单目运算符
 UnaryOp
-:   LOP_ADD 
-|   LOP_SUB 
-|   LOP_NOT 
+: LOP_ADD {$$ = $1;}
+| LOP_SUB {$$ = $1;}
+| LOP_NOT {$$ = $1;}
 ;
 //乘除表达式
 Mulexpr
-:   Unaryexpr {
+: Unaryexpr {
     $$ = $1;
 }
-|   Addexpr LOP_MUL Mulexpr {
+| Mulexpr LOP_MUL Unaryexpr {
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
 }
-|   Addexpr LOP_DEV Mulexpr {
+| Mulexpr LOP_DEV Unaryexpr {
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
@@ -172,15 +197,15 @@ Mulexpr
 ;
 //加减表达式
 Addexpr 
-:   Mulexpr {
+: Mulexpr {
     $$ = $1;
 }
-|   Addexpr LOP_ADD Mulexpr {
+| Addexpr LOP_ADD Mulexpr {
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
 }
-|   Addexpr LOP_SUB Mulexpr{
+| Addexpr LOP_SUB Mulexpr{
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
@@ -188,10 +213,25 @@ Addexpr
 ;
 //关系表达式
 Relexpr
-:   Addexpr {
+: Addexpr {
     $$ = $1;
 }
-|   Relexpr RelOp Addexpr {
+| Addexpr LOG_LAB Relexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
+| Addexpr LOG_RAB Relexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
+| Addexpr LOG_LB Relexpr {
+    $2->addChild($1);
+    $2->addChild($3);
+    $$ = $2;
+}
+| Addexpr LOG_RB Relexpr {
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
@@ -199,15 +239,15 @@ Relexpr
 ;
 //相等性表达式
 Eqexpr
-:   Relexpr {
+: Relexpr {
     $$ = $1;
 }
-|   Eqexpr LOG_MASS Relexpr {
+| Eqexpr LOG_MASS Relexpr {
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
 }
-|   Eqexpr LOG_MNOT Relexpr {
+| Eqexpr LOG_MNOT Relexpr {
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
@@ -216,10 +256,10 @@ Eqexpr
 
 //逻辑与表达式
 LAndexpr
-:   Eqexpr {
+: Eqexpr {
     $$ = $1;
 }
-|   LAndexpr LOG_AND Eqexpr { 
+| LAndexpr LOG_AND Eqexpr { 
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
@@ -227,14 +267,18 @@ LAndexpr
 ;
 //逻辑或表达式
 LOrexpr
-:   LAndexpr {
+: LAndexpr {
     $$ = $1;
 }
-|   LOrexpr LOG_OR LAndexpr {
+| LOrexpr LOG_OR LAndexpr {
     $2->addChild($1);
     $2->addChild($3);
     $$ = $2;
 } 
+;
+
+Constexpr
+: Addexpr {$$ = $1;}
 ;
 %%
 

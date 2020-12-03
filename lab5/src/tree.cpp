@@ -96,6 +96,7 @@ void TreeNode::printAST() {
 void TreeNode::printSpecialInfo() {
     switch(this->nodeType){
         case NODE_CONST:
+            cout<<endl;
             break;
         case NODE_VAR:
             cout<<std::left<<"var_name:"<<this->var_name<<endl;
