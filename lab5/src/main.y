@@ -52,7 +52,7 @@ single_expr
     $$ = node;
 }
 declaration
-: T IDENTIFIER LOP_ASSIGN expr{  // declare and init
+: T IDENTIFIER LOP_ASSIGN Number{  // declare and init
     cout<<6<<endl;
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
     node->stype = STMT_DECL;
@@ -70,17 +70,23 @@ declaration
 }
 ;
 
-expr
+Ident
 : IDENTIFIER {
     $$ = $1;
 }
-| INTEGER {
+;
+Number
+: INTEGER {
     $$ = $1;
 }
-| CHAR {
+;
+Char 
+: CHAR {
     $$ = $1;
 }
-| STRING {
+;
+String 
+: STRING {
     $$ = $1;
 }
 ;
@@ -93,7 +99,7 @@ printf_stm
 }
 
 if_stm
-: SEN_IF LP expr RP LB statements RB {
+: SEN_IF LP Number RP LB statements RB {
     cout<<7<<endl;
     TreeNode* node = new TreeNode(lineno,NODE_STMT);
     node->stype = STMT_IF;
