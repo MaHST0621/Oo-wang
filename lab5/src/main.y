@@ -12,7 +12,7 @@
 %token SEMICOLON COMMA LP RP LB RB
 %token IDENTIFIER INTEGER CHAR BOOL STRING
 %token LOP_MADD LOP_MSUB
-%token LOG_MASS LOG_RB LOG_LB LOG_RAB LOG_LAB
+%token LOG_MASS LOG_MNOT LOG_RB LOG_LB LOG_RAB LOG_LAB LOG_AND LOG_OR
 
 %left COMMA
 %right LOP_NOT
@@ -37,20 +37,8 @@ statement
 | declaration SEMICOLON {$$ = $1;}
 | if_stm {cout<<5<<endl;$$ = $1;}
 | printf_stm {$$ = $1;}
-| single_expr   {$$ = $1;}
 ;
 
-single_expr
-: LOP_MADD IDENTIFIER {
-    TreeNode* node = new TreeNode(lineno,NODE_STMT);
-    node->addChild($2);
-    $$ = node;
-}
-| LOP_MSUB IDENTIFIER {
-    TreeNode* node = new TreeNode(lineno,NODE_STMT);
-    node->addChild($2);
-    $$ = node;
-}
 declaration
 : T IDENTIFIER LOP_ASSIGN Number{  // declare and init
     cout<<6<<endl;
@@ -116,6 +104,75 @@ T
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
 ;
 
+expr
+:   Addexpr 
+;
+LVal
+:   IDENTIFIER
+;
+//基本表达式
+Primaryexpr
+:   LP expr RP
+|   LVal
+|   Number
+;
+//条件表达式
+Cond
+:   LOrexpr
+;
+//关系运算符
+RelOp
+:   LOG_MASS
+|   LOG_LB 
+|   LOG_RB
+|   LOG_LAB
+|   LOG_RAB
+;
+//一元表达式
+Unaryexpr
+:   Primaryexpr
+|   UnaryOp Unaryexpr
+;
+//单目运算符
+UnaryOp
+:   LOP_ADD
+|   LOP_SUB
+|   LOP_NOT 
+;
+//乘除表达式
+Mulexpr
+:   Unaryexpr
+|   Addexpr LOP_ADD Mulexpr
+|   Addexpr LOP_SUB Mulexpr
+;
+//加减表达式
+Addexpr 
+:   Mulexpr
+|   Addexpr LOP_ADD Mulexpr
+|   Addexpr LOP_SUB Mulexpr
+;
+//关系表达式
+Relexpr
+:   Addexpr
+|   Relexpr RelOp Addexpr
+;
+//相等性表达式
+Eqexpr
+:   Relexpr
+|   Eqexpr LOG_MASS Relexpr
+|   Eqexpr LOG_MNOT Relexpr
+;
+
+//逻辑与表达式
+LAndexpr
+:   Eqexpr
+|   LAndexpr LOG_AND Eqexpr
+;
+//逻辑或表达式
+LOrexpr
+:   LAndexpr
+|   LOrexpr LOG_OR LAndexpr 
+;
 %%
 
 int yyerror(char const* message)

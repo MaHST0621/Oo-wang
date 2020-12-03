@@ -37,10 +37,13 @@ IDENTIFIER [a-zA-Z][_a-zA-Z0-9]*
 "/" return LOP_DEV;
 
 "==" return LOG_MASS;
+"!=" return LOG_MNOT;
 "<"  return LOG_RB;
 "<=" return LOG_RAB;
 ">"  return  LOG_LB;
 ">=" return LOG_LAB;
+"||" return LOG_OR;
+"&&" return LOG_AND;
 
 "++" return LOP_MADD;
 "--" return LOP_MSUB;
