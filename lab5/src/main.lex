@@ -81,6 +81,7 @@ LOP_MSUB   "--"
 }
 {STRING} {
     TreeNode* node = new TreeNode(lineno,NODE_CONST);
+    node->str_val = string(yytext);
     node->type = TYPE_STRING;
     yylval = node;
     return STRING;
@@ -88,25 +89,25 @@ LOP_MSUB   "--"
 
 {WHILTESPACE} /* do nothing */
 
-{LOP_ASSIGN}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_ASSIGN;}
-{LOP_ADD}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_ADD;}
-{LOP_SUB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_SUB;}
-{LOP_MUL}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_MUL;}
-{LOP_DEV}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_DEV;}
+{LOP_ASSIGN}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_ASSIGN;yylval = node;return LOP_ASSIGN;}
+{LOP_ADD}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_ADD;yylval = node;return LOP_ADD;}
+{LOP_SUB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_SUB ;yylval = node;return LOP_SUB;}
+{LOP_MUL}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MUL; yylval = node;return LOP_MUL;}
+{LOP_DEV}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_DEV;yylval = node;return LOP_DEV;}
 
 
 
-{LOG_MASS}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_MASS;}
-{LOG_MNOT}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_RB;}
-{LOG_RB}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_RB;}
-{LOG_RAB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_RAB;}
-{LOG_LB}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_LAB;}
-{LOG_LAB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_LAB;}
-{LOG_OR}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_OR;}
-{LOG_AND}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOG_AND;}
+{LOG_MASS}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MASS; yylval = node;return LOG_MASS;}
+{LOG_MNOT}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MNOT; yylval = node;return LOG_RB;}
+{LOG_RB}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_RB; yylval = node;return LOG_RB;}
+{LOG_RAB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_RAB; yylval = node;return LOG_RAB;}
+{LOG_LB}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_LB; yylval = node;return LOG_LAB;}
+{LOG_LAB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_LAB; yylval = node;return LOG_LAB;}
+{LOG_OR}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_OR; yylval = node;return LOG_OR;}
+{LOG_AND}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_AND; yylval = node;return LOG_AND;}
 
-{LOP_MADD}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_MADD;}
-{LOP_MSUB}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);yylval = node;return LOP_SUB;}
+{LOP_MADD}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MADD; yylval = node;return LOP_MADD;}
+{LOP_MSUB}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MSUB;;yylval = node;return LOP_SUB;}
 
 
 

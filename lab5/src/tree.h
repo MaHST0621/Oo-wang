@@ -44,6 +44,7 @@ enum StmtType {
     STMT_IF,
     STMT_FOR,
     STMT_WHILE,
+    STMT_PRINTF,
 }
 ;
 

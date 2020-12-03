@@ -96,19 +96,18 @@ void TreeNode::printAST() {
 void TreeNode::printSpecialInfo() {
     switch(this->nodeType){
         case NODE_CONST:
-            cout<<std::left<<"NODE_CONST:"<<this->int_val<<endl;
             break;
         case NODE_VAR:
-            cout<<std::left<<"NODE_VAR:"<<this->var_name<<endl;
+            cout<<std::left<<"var_name:"<<this->var_name<<endl;
             break;
         case NODE_EXPR:
-            cout<<"NODE_EXPR:"<<endl;
+            cout<<"expr:"<<this->opType2String(this->optype)<<endl;
             break;
         case NODE_STMT:
             cout<<"STMT:"<<this->sType2String(this->stype)<<endl;
             break;
         case NODE_TYPE:
-            cout<<std::left<<"NODE_TYPE:"<<this->type->getTypeInfo()<<endl;
+            cout<<std::left<<"dec_type:"<<this->type->getTypeInfo()<<endl;
             break;
         case NODE_PROG:
             cout<<"PROG"<<endl;
@@ -129,6 +128,10 @@ string TreeNode::sType2String(StmtType type) {
             return "smt-decl";
         case STMT_WHILE:
             return "smt-while";
+        case STMT_PRINTF:
+            return "smt-printf";
+        case STMT_SKIP:
+            return "smt-skip";
     }
 }
 
@@ -150,4 +153,40 @@ string TreeNode::nodeType2String (NodeType type){
         case NODE_CONST:
             return "const";
     }
+}string TreeNode::opType2String(OperatorType type)
+{
+    switch(type)
+    {
+        case OP_ASSIGN:
+            return "=";
+        case OP_ADD:
+            return "+";
+        case OP_SUB:
+            return "-";
+        case OP_MUL:
+            return "*";
+        case OP_DEV:
+            return "/";
+        case OP_LB:
+            return ">";
+        case OP_OR:
+            return "||";
+        case OP_RB:
+            return "<";
+        case OP_AND:
+            return "&&";
+        case OP_LAB:
+            return ">=";
+        case OP_RAB:
+            return "<=";
+        case OP_MADD:
+            return "++";
+        case OP_MASS:
+            return "==";
+        case OP_MNOT:
+            return "!=";
+        case OP_MSUB:
+            return "--";
+    }
+
 }
