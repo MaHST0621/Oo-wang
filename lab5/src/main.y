@@ -24,19 +24,19 @@
 %%
 
 program
-: statements {root = new TreeNode(0, NODE_PROG); root->addChild($1);};
+: statements {cout<<1<<endl;root = new TreeNode(0, NODE_PROG); root->addChild($1);};
 
 statements
-:  statement {$$=$1;}
-|  statements statement {$$=$1; $$->addSibling($2);}
+:  statement {cout<<2<<endl;$$=$1;}
+|  statements statement {cout<<3<<endl;$$=$1; $$->addSibling($2);}
 ;
 
 statement
 : SEMICOLON  {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
-| LB statement RB {$$ = $2;}
+| LB statement RB {cout<<4<<endl;$$ = $2;}
 | declaration SEMICOLON {$$ = $1;}
-| if_stm {$$ = $1;}
-| printf_stm SEMICOLON {$$ = $1;}
+| if_stm {cout<<5<<endl;$$ = $1;}
+| printf_stm {$$ = $1;}
 | single_expr   {$$ = $1;}
 ;
 
@@ -53,6 +53,7 @@ single_expr
 }
 declaration
 : T IDENTIFIER LOP_ASSIGN expr{  // declare and init
+    cout<<6<<endl;
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
     node->stype = STMT_DECL;
     node->addChild($1);
@@ -85,25 +86,26 @@ expr
 ;
 
 printf_stm
-: SEN_PRINTF expr {
-    TreeNode* node = new TreeNode($1->lineno,NODE_STMT);
-    node->addChild($2);
+: SEN_PRINTF LP IDENTIFIER RP {
+    TreeNode* node = new TreeNode(lineno,NODE_STMT);
+    node->addChild($3);
     $$ = node;
 }
 
 if_stm
-: SEN_IF LP expr RP statement {
+: SEN_IF LP expr RP LB statements RB {
+    cout<<7<<endl;
     TreeNode* node = new TreeNode(lineno,NODE_STMT);
     node->stype = STMT_IF;
     node->addChild($3);
-    node->addChild($5);
+    node->addChild($6);
     $$ = node;
 }
 
 
 
 T
-: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;} 
+: T_INT {cout<<8<<endl;$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;} 
 | T_CHAR {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_CHAR;}
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
 ;
