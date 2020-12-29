@@ -14,50 +14,67 @@ INTEGER [0-9]+
 CHAR \'.?\'
 STRING \".+\"
 
-/* IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]* */
-IDENTIFIER [a-zA-Z][_a-zA-Z0-9]*
+LP "("
+RP ")"
+LB "{"
+RB "}"
 
-LOP_ASSIGN   "="
-LOP_ADD     "+"     
-LOP_SUB     "-"
-LOP_MUL     "*"
-LOP_DEV     "/"
-
-LOG_MASS   "=="
-LOG_MNOT   "!="
-LOG_RB     "<"
-LOG_RAB    "<="
-LOG_LB     ">"
-LOG_LAB    ">="
-LOG_OR     "||"
-LOG_AND    "&&"
-
-LOP_MADD   "++"
-LOP_MSUB   "--"
-
-
+EQU "=="
+NEQ "!="
+LT  "<"
+GT  ">"
+LEQ "<="
+GEQ ">="
+AND "&&"
+OR  "||"
+BAND "&"
+BOR  "|"
+NOT !
+ADD "+"
+SUB "-"
+MULT "*"
+DIV "/"
+MOD "%"
+SADD "++"
+SSUB "--"
+IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 %%
 
 {BLOCKCOMMENT}  /* do nothing */
 {LINECOMMENT}  /* do nothing */
-"if"  return SEN_IF;
-"while" return SEN_WHILE;
-"for"  return SEN_FOR;
-"printf" return SEN_PRINTF;
-"scanf" return SEN_SCANF;
+
 
 "int" return T_INT;
 "bool" return T_BOOL;
 "char" return T_CHAR;
+"void" return T_VOID;
 
-";" return SEMICOLON;
+"=" return LOP_ASSIGN;//赋值
+
 "," return COMMA;
-"(" return LP;
-")" return RP;
+";" return  SEMICOLON;
+
+"+=" return ADDEQ;
+"-=" return SUBEQ;
+"*=" return MULTEQ;
+"/=" return DIVEQ;
+"%=" return MODEQ;
+
+"if" return IF;
+"else" return ELSE;
+"while" return WHILE;
+"printf" return PRINTF;
+"scanf" return SCANF;
+"const" return CONST;
+"return" return RETURN;
+"break" return BREAK;
+"continue" return CONTINUE;
+"for" return FOR;
+
 "{" return LB;
 "}" return RB;
-"[" return LA;
-"]" return RA;
+"(" return LP;
+")" return RP;
 
 {INTEGER} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
@@ -75,44 +92,148 @@ LOP_MSUB   "--"
     return CHAR;
 }
 
+{STRING} {
+    TreeNode* node=new TreeNode(lineno, NODE_CONST);
+    node->type=TYPE_STRING;
+    node->str_val = string(yytext);
+    yylval = node;
+    return STRING;
+}//常量
+
+{EQU} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_EQ;
+    yylval = node;
+    return EQU;
+}
+
+{NEQ} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_NEQ;
+    yylval = node;
+    return NEQ;    
+}
+
+{LT} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_LT;
+    yylval = node;
+    return LT;
+}
+
+{GT} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_GT;
+    yylval = node;
+    return GT;
+}
+
+{LEQ} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_LEQ;
+    yylval = node;
+    return LEQ;
+}
+
+{GEQ} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_GEQ;
+    yylval = node;
+    return GEQ;
+}
+
+{AND} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_AND;
+    yylval = node;
+    return AND;
+}
+
+{OR} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_OR;
+    yylval = node;
+    return OR;
+}
+
+{NOT} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_NOT;
+    yylval = node;
+    return NOT;
+}
+
+{BAND} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_BAND;
+    yylval = node;
+    return BAND;
+}
+
+{BOR} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_BOR;
+    yylval = node;
+    return BOR;
+}
+
+{ADD} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_ADD;
+    yylval = node;
+    return ADD;
+}
+
+{SUB} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_SUB;
+    yylval = node;
+    return SUB;
+}
+
+{MULT} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_MULT;
+    yylval = node;
+    return MULT;
+}
+
+{DIV} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_DIV;
+    yylval = node;
+    return DIV;
+}
+
+{MOD} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_MOD;
+    yylval = node;
+    return MOD;
+}
+
+{SADD} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_SADD;
+    yylval = node;
+    return SADD;
+}
+
+{SSUB} {
+    TreeNode* node=new TreeNode(lineno, NODE_EXPR);
+    node->optype=OP_SSUB;
+    yylval = node;
+    return SSUB;
+}//表达式
+
 {IDENTIFIER} {
     TreeNode* node = new TreeNode(lineno, NODE_VAR);
     node->var_name = string(yytext);
     yylval = node;
     return IDENTIFIER;
-}
-{STRING} {
-    TreeNode* node = new TreeNode(lineno,NODE_CONST);
-    node->str_val = string(yytext);
-    node->type = TYPE_STRING;
-    yylval = node;
-    return STRING;
-        }
+}//标识符
 
 {WHILTESPACE} /* do nothing */
-
-{LOP_ASSIGN}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_ASSIGN;yylval = node;return LOP_ASSIGN;}
-{LOP_ADD}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_ADD;yylval = node;return LOP_ADD;}
-{LOP_SUB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_SUB ;yylval = node;return LOP_SUB;}
-{LOP_MUL}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MUL; yylval = node;return LOP_MUL;}
-{LOP_DEV}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_DEV;yylval = node;return LOP_DEV;}
-
-
-
-{LOG_MASS}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MASS; yylval = node;return LOG_MASS;}
-{LOG_MNOT}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MNOT; yylval = node;return LOG_RB;}
-{LOG_RB}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_RB; yylval = node;return LOG_RB;}
-{LOG_RAB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_RAB; yylval = node;return LOG_RAB;}
-{LOG_LB}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_LB; yylval = node;return LOG_LAB;}
-{LOG_LAB}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_LAB; yylval = node;return LOG_LAB;}
-{LOG_OR}    {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_OR; yylval = node;return LOG_OR;}
-{LOG_AND}   {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_AND; yylval = node;return LOG_AND;}
-
-{LOP_MADD}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MADD; yylval = node;return LOP_MADD;}
-{LOP_MSUB}  {TreeNode* node = new TreeNode(lineno,NODE_EXPR);node->optype = OP_MSUB;;yylval = node;return LOP_SUB;}
-
-
-
 
 {EOL} lineno++;
 

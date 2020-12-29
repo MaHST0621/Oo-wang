@@ -18,33 +18,45 @@ enum NodeType
 enum OperatorType
 {
       // ==
-    OP_ASSIGN,
-    OP_ADD,
-    OP_SUB,
-    OP_MUL,
-    OP_DEV,
-
-    OP_MASS,
-    OP_MNOT,
-    OP_RB,
-    OP_RAB,
-    OP_LB,
-    OP_LAB,
-
-    OP_MADD,
-    OP_MSUB,
-
     OP_AND,
     OP_OR,
+    OP_ADD,
+    OP_SUB,
+    OP_EQ,
+    OP_NEQ,
+    OP_LT,
+    OP_GT,
+    OP_LEQ,
+    OP_GEQ,
+    OP_NOT,
+    OP_BAND,
+    OP_BOR,
+    OP_MULT,
+    OP_DIV,
+    OP_MOD,
+    OP_SADD,
+    OP_SSUB,
 };
 
 enum StmtType {
+    STMT_CONST,
+    STMT_FUNCTION,
+    STMT_SCANF,
+    STMT_ASSIGN,
+    STMT_ADD_ASSIGN,
+    STMT_SUB_ASSIGN,
+    STMT_MULT_ASSIGN,
+    STMT_DIV_ASSIGN,
+    STMT_MOD_ASSIGN,
+    STMT_RETURN,
+    STMT_BREAK,
+    STMT_CONTINUE,
     STMT_SKIP,
     STMT_DECL,
+    STMT_PRINTF,
     STMT_IF,
     STMT_FOR,
     STMT_WHILE,
-    STMT_PRINTF,
 }
 ;
 

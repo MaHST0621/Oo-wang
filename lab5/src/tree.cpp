@@ -133,6 +133,30 @@ string TreeNode::sType2String(StmtType type) {
             return "smt-printf";
         case STMT_SKIP:
             return "smt-skip";
+        case STMT_FUNCTION:
+            return "smt-function";
+        case STMT_CONST:
+            return "smt-const";
+        case STMT_SCANF:
+            return "smt-scanf";
+        case STMT_ASSIGN:
+            return "smt-assign";
+        case STMT_ADD_ASSIGN:
+            return "smt-add-assign";
+        case STMT_SUB_ASSIGN:
+            return "smt-sub-assign";
+        case STMT_MULT_ASSIGN:
+            return "smt-mult-assign";
+        case STMT_DIV_ASSIGN:
+            return "smt-div-assign";
+        case STMT_MOD_ASSIGN:
+            return "smt-mod-assign";
+        case STMT_RETURN:
+            return "smt-return";
+        case STMT_BREAK:
+            return "smt-break";
+        case STMT_CONTINUE:
+            return "smt-continue";
     }
 }
 
@@ -158,35 +182,41 @@ string TreeNode::nodeType2String (NodeType type){
 {
     switch(type)
     {
-        case OP_ASSIGN:
+        case OP_EQ:
             return "=";
         case OP_ADD:
             return "+";
         case OP_SUB:
             return "-";
-        case OP_MUL:
+        case OP_MULT:
             return "*";
-        case OP_DEV:
+        case OP_DIV:
             return "/";
-        case OP_LB:
-            return ">";
+        case OP_MOD:
+            return "%";
+        case OP_LT:
+            return "<";
         case OP_OR:
             return "||";
-        case OP_RB:
-            return "<";
+        case OP_BOR:
+            return "|";
+        case OP_GT:
+            return ">";
         case OP_AND:
             return "&&";
-        case OP_LAB:
+        case OP_BAND:
+            return "&";
+        case OP_GEQ:
             return ">=";
-        case OP_RAB:
+        case OP_LEQ:
             return "<=";
-        case OP_MADD:
+        case OP_SADD:
             return "++";
-        case OP_MASS:
-            return "==";
-        case OP_MNOT:
+        case OP_NEQ:
             return "!=";
-        case OP_MSUB:
+        case OP_NOT:
+            return "!";
+        case OP_SSUB:
             return "--";
     }
 

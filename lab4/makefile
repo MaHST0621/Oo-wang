@@ -1,4 +1,4 @@
-all: lc  clean
+all: lcc  clean
 
 lc:
 	flex hw4.l
@@ -6,7 +6,7 @@ lc:
 	./lc.out<test.c>testout0
 
 lcc:
-	flex -+ hw4.l
+	flex -+ test0.l
 	g++ lex.yy.cc -o lcc.out
 	./lcc.out<test.c>testout1
 
